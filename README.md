@@ -140,6 +140,20 @@ Codex_Help/
   CONTRIBUTING.md
 ```
 
+## 结构说明 / Structure Guide
+
+| 路径 / Path | 作用 / Purpose |
+| --- | --- |
+| `README.md` | 仓库首页，提供中英文项目介绍、快速开始、阅读入口和官方文档链接。 / Repository homepage with bilingual overview, fast start, reading links, and official documentation links. |
+| `docs/zh-CN.md` | 中文完整教程，适合中文读者系统学习 Codex 功能、配置、安全和工作流。 / Full Chinese guide for learning Codex features, configuration, safety, and workflows. |
+| `docs/en-US.md` | English full guide, aligned with the Chinese guide for English readers. / 英文完整教程，与中文教程保持同一事实口径。 |
+| `docs/source-check.md` | 记录本教程对照官方 Codex 手册校验的范围和刷新时间。 / Records the official Codex manual refresh and source-check scope. |
+| `assets/images/` | 存放教程引用的 Codex 界面截图，支持离线阅读。 / Stores Codex interface screenshots used by the guides for offline reading. |
+| `LICENSE` | MIT License，说明本仓库原创教程文本的许可。 / MIT License for the original guide text. |
+| `NOTICE.md` | 声明本仓库为非官方学习材料，并说明 OpenAI 名称、商标、官方文档和截图权利归属。 / Notes that this is an unofficial learning guide and clarifies ownership of OpenAI names, trademarks, official docs, and screenshots. |
+| `CONTRIBUTING.md` | 贡献指南，说明如何基于官方文档更新内容并保持中英文一致。 / Contribution guide for official-doc-aligned updates and bilingual consistency. |
+| `.gitignore` | 忽略系统文件、日志、本地环境变量和依赖目录。 / Ignores system files, logs, local environment files, and dependency folders. |
+
 ## 许可 / License
 
 中文：本仓库原创教程文本采用 MIT License。OpenAI 产品名称、商标、官方文档和截图仍受其各自权利方条款约束。
