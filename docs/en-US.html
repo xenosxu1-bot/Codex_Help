@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGENTS.md</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --link: #0969da;
+      --side: #f8fafc;
+      --accent: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.7;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 28px 20px;
+      background: var(--side);
+      border-right: 1px solid var(--line);
+    }
+    aside h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      color: var(--accent);
+    }
+    .lang-switch {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 22px;
+    }
+    .lang {
+      display: inline-flex;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--link);
+      text-decoration: none;
+      background: #fff;
+      font-size: 14px;
+    }
+    .lang.active {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    nav a {
+      display: block;
+      padding: 7px 8px;
+      border-radius: 8px;
+      color: var(--link);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    nav a:hover {
+      background: #eef2ff;
+      text-decoration: underline;
+    }
+    main {
+      width: min(980px, 100%);
+      padding: 38px 44px 80px;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 34px;
+      line-height: 1.25;
+      color: var(--accent);
+    }
+    h2 {
+      margin-top: 42px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 26px;
+      color: var(--accent);
+      scroll-margin-top: 20px;
+    }
+    h3 { margin-top: 28px; font-size: 20px; }
+    a { color: var(--link); }
+    img {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 12px 0 18px;
+    }
+    code {
+      padding: 0.1em 0.35em;
+      border-radius: 5px;
+      background: #f1f5f9;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    }
+    pre {
+      overflow: auto;
+      padding: 16px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    pre code { padding: 0; background: transparent; color: inherit; }
+    blockquote {
+      margin: 16px 0;
+      padding: 10px 16px;
+      border-left: 4px solid #94a3b8;
+      color: var(--muted);
+      background: #f8fafc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      vertical-align: top;
+    }
+    th { background: #f8fafc; }
+    @media (max-width: 900px) {
+      .layout { display: block; }
+      aside {
+        position: static;
+        height: auto;
+        max-height: 45vh;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      main { padding: 28px 18px 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <h2>目录 / Outline</h2>
+      <div class="lang-switch"><a class="lang" href="zh-CN.html">中文</a><a class="lang active" href="en-US.html">English</a></div>
+      <nav><a href="#1-what-codex-is">1. What Codex Is</a>
+<a href="#2-what-codex-can-help-with">2. What Codex Can Help With</a>
+<a href="#3-choose-the-right-surface">3. Choose the Right Surface</a>
+<a href="#4-interface-tour">4. Interface Tour</a>
+<a href="#5-first-run-workflow">5. First-Run Workflow</a>
+<a href="#6-prompting-that-works">6. Prompting That Works</a>
+<a href="#7-threads-context-plan-mode-and-goal-mode">7. Threads, Context, Plan Mode, and Goal Mode</a>
+<a href="#8-approvals-sandboxing-and-security">8. Approvals, Sandboxing, and Security</a>
+<a href="#9-configuration">9. Configuration</a>
+<a href="#10-models-and-reasoning">10. Models and Reasoning</a>
+<a href="#11-codex-app-tips">11. Codex App Tips</a>
+<a href="#12-codex-cli-tips">12. Codex CLI Tips</a>
+<a href="#13-ide-extension-tips">13. IDE Extension Tips</a>
+<a href="#14-cloud-github-slack-and-linear">14. Cloud, GitHub, Slack, and Linear</a>
+<a href="#15-agents-md">15. AGENTS.md</a>
+<a href="#repository-expectations">Repository expectations</a>
+<a href="#review-guidelines">Review guidelines</a>
+<a href="#16-skills-plugins-mcp-hooks-and-rules">16. Skills, Plugins, MCP, Hooks, and Rules</a>
+<a href="#17-automations-and-subagents">17. Automations and Subagents</a>
+<a href="#18-windows-notes">18. Windows Notes</a>
+<a href="#19-prompt-templates">19. Prompt Templates</a>
+<a href="#20-troubleshooting">20. Troubleshooting</a>
+<a href="#21-official-sources">21. Official Sources</a></nav>
+    </aside>
+    <main><h1>OpenAI Codex: Features and Practical Usage Guide</h1>
+
+<blockquote>Status: This is an unofficial guide based on the OpenAI Codex official manual refreshed on 2026-07-08. Codex evolves quickly. For pricing, model availability, feature maturity, enterprise policy, and current limits, verify the official documentation.</blockquote>
+
+<h2 id="1-what-codex-is">1. What Codex Is</h2>
+
+<p>Codex is OpenAI&#x27;s coding agent for software development. It can read a codebase, edit files, run commands, inspect tool output, review diffs, debug failures, and call configured tools when needed.</p>
+
+<p>Think of Codex as a development teammate that works best when the task is scoped and verifiable. Give it the goal, context, constraints, and done criteria; then ask it to implement, test, and summarize what changed.</p>
+
+<h2 id="2-what-codex-can-help-with">2. What Codex Can Help With</h2>
+
+<p>Codex is useful for:</p>
+
+<ul>
+<li>Writing features that follow existing project patterns.</li>
+<li>Explaining unfamiliar or legacy codebases.</li>
+<li>Debugging failures from logs, stack traces, tests, or reproducible steps.</li>
+<li>Adding unit, integration, and regression tests.</li>
+<li>Reviewing local diffs or pull requests.</li>
+<li>Running repetitive workflows such as migrations, refactors, changelog updates, and project setup.</li>
+<li>Generating or reviewing non-code artifacts such as PDFs, spreadsheets, documents, and presentations in the Codex App.</li>
+</ul>
+
+<p>Best results usually come from tasks that can be checked with a command, test, screenshot, or review step.</p>
+
+<h2 id="3-choose-the-right-surface">3. Choose the Right Surface</h2>
+
+<table>
+<tr><th>Surface</th><th>Best for</th><th>Strengths</th><th>Notes</th></tr>
+<tr><td>Codex App</td><td>Desktop work, multiple threads, visual review, worktrees, automations</td><td>Rich UI, Git tools, terminal, browser preview, artifact viewer</td><td>Also supports projectless chats</td></tr>
+<tr><td>CLI</td><td>Terminal-first work, remote machines, scripts, CI-like workflows</td><td>Fast, composable, supports <code>codex exec</code></td><td>Mention paths explicitly</td></tr>
+<tr><td>IDE Extension</td><td>Editor-attached work</td><td>Open files and selected code become context</td><td>Great for short feedback loops</td></tr>
+<tr><td>Cloud</td><td>Parallel or async hosted tasks</td><td>Offloads long work</td><td>Requires GitHub and a cloud environment</td></tr>
+<tr><td>GitHub</td><td>Pull request review and fixes</td><td><code>@codex review</code>, <code>@codex fix...</code></td><td>Requires Codex cloud and review setup</td></tr>
+<tr><td>Slack / Linear</td><td>Delegating from collaboration tools</td><td>Starts cloud tasks from existing context</td><td>Requires connectors and environments</td></tr>
+</table>
+
+<p>Quick rule:</p>
+
+<ul>
+<li>Coding in an editor: use the IDE Extension or Codex App.</li>
+<li>Working from a terminal: use CLI.</li>
+<li>Running long or parallel work: use Cloud or App worktrees.</li>
+<li>Reviewing a PR: use GitHub integration or local <code>/review</code>.</li>
+<li>Repeating a workflow: turn it into a Skill or Plugin.</li>
+</ul>
+
+<h2 id="4-interface-tour">4. Interface Tour</h2>
+
+<h3>Codex App</h3>
+
+<p><img src="assets/images/codex-app-review-pane.webp" alt="Codex App review pane" loading="lazy"></p>
+
+<p>Codex App is the desktop workspace for threads, diffs, reviews, Git actions, local terminals, worktrees, automations, browser preview, and artifacts.</p>
+
+<h3>Codex CLI</h3>
+
+<p><img src="assets/images/codex-cli-splash.png" alt="Codex CLI splash" loading="lazy"></p>
+
+<p>The CLI runs Codex in the terminal. Use it interactively with <code>codex</code> or non-interactively with <code>codex exec</code>.</p>
+
+<h3>IDE Extension</h3>
+
+<p><img src="assets/images/codex-ide-extension.webp" alt="Codex IDE extension" loading="lazy"></p>
+
+<p>The IDE Extension brings Codex into VS Code-compatible editors. It can use open files, selected code, and editor context.</p>
+
+<h3>In-app Browser</h3>
+
+<p><img src="assets/images/codex-in-app-browser.webp" alt="Codex in-app browser" loading="lazy"></p>
+
+<p>The in-app browser previews local development servers, file-backed previews, and public pages that do not require sign-in.</p>
+
+<h3>Browser Comments</h3>
+
+<p><img src="assets/images/codex-browser-annotations.webp" alt="Codex browser annotations" loading="lazy"></p>
+
+<p>Browser comments let you mark a page region and ask Codex to address that exact visual feedback.</p>
+
+<h3>Artifact Viewer</h3>
+
+<p><img src="assets/images/codex-artifact-viewer.webp" alt="Codex artifact viewer" loading="lazy"></p>
+
+<p>The Codex App can preview non-code artifacts such as documents, spreadsheets, presentations, and PDFs.</p>
+
+<h3>Automations</h3>
+
+<p><img src="assets/images/codex-automations.webp" alt="Codex automations" loading="lazy"></p>
+
+<p>Automations can run scheduled checks, reminders, monitors, or recurring follow-up tasks.</p>
+
+<h3>Floating Pop-out</h3>
+
+<p><img src="assets/images/codex-popout-window.webp" alt="Codex floating pop-out" loading="lazy"></p>
+
+<p>The floating pop-out keeps an active thread visible next to your browser, editor, or preview window.</p>
+
+<h3>Browser Developer Mode</h3>
+
+<p><img src="assets/images/codex-browser-developer-mode.webp" alt="Codex browser developer mode" loading="lazy"></p>
+
+<p>Browser Developer Mode can enable deeper Chrome DevTools Protocol access for profiling and debugging, subject to workspace policy.</p>
+
+<h2 id="5-first-run-workflow">5. First-Run Workflow</h2>
+
+<p>1. Start at the repository root:</p>
+
+<p>```bash</p>
+<p>codex</p>
+<p>```</p>
+
+<p>2. Ask Codex to inspect the project before editing:</p>
+
+<p>```text</p>
+<p>Read this repository structure. Identify the build, test, lint commands, main source folders, and project conventions. Do not edit files yet.</p>
+<p>```</p>
+
+<p>3. Create or improve <code>AGENTS.md</code>:</p>
+
+<p>```text</p>
+<p>Generate an AGENTS.md for this repository. Include setup commands, tests, linting, coding conventions, review expectations, and done criteria.</p>
+<p>```</p>
+
+<p>4. Start with a small, verifiable task:</p>
+
+<p>```text</p>
+<p>Fix this failing test without changing the public API. After the fix, run the smallest relevant test and report the command and result.</p>
+<p>```</p>
+
+<p>5. Review the diff:</p>
+
+<p>```text</p>
+<p>/review</p>
+<p>```</p>
+
+<h2 id="6-prompting-that-works">6. Prompting That Works</h2>
+
+<p>A strong Codex prompt usually includes four things:</p>
+
+<ul>
+<li>Goal: what should change or be built.</li>
+<li>Context: files, folders, logs, screenshots, examples, or errors.</li>
+<li>Constraints: APIs, architecture, security rules, compatibility, dependency limits, or style.</li>
+<li>Done criteria: tests pass, bug no longer reproduces, screenshot matches, or behavior is verified.</li>
+</ul>
+
+<p>Template:</p>
+
+<pre><code class="language-text">
+Goal:
+&lt;What you want changed&gt;
+
+Context:
+- Files: @src/foo.ts @src/foo.test.ts
+- Current behavior: ...
+- Related example: ...
+
+Constraints:
+- Do not change the public API
+- Reuse existing helpers
+- Do not add dependencies unless you explain why first
+
+Done when:
+- Add or update tests
+- Run &lt;specific command&gt;
+- Summarize changes and verification
+</code></pre>
+
+<p>For complex work, start with Plan mode:</p>
+
+<pre><code class="language-text">
+/plan Investigate the authentication flow and propose a migration plan. Do not edit files yet.
+</code></pre>
+
+<p>When the requirement is fuzzy, ask Codex to interview you first:</p>
+
+<pre><code class="language-text">
+I have a vague idea for improving dashboard performance. Ask me the key questions needed to define scope, metrics, and acceptance criteria before writing code.
+</code></pre>
+
+<h2 id="7-threads-context-plan-mode-and-goal-mode">7. Threads, Context, Plan Mode, and Goal Mode</h2>
+
+<p>A thread is one continuous Codex session: prompts, model output, file reads, edits, commands, approvals, and follow-ups. Keep related work in one thread, but avoid running two threads that edit the same files at the same time.</p>
+
+<p>Local threads run on your machine. Cloud threads run in isolated cloud environments and are useful for async or parallel work.</p>
+
+<p>Codex manages a model context window. Long tasks may be compacted automatically, and you can use <code>/compact</code> to summarize old context.</p>
+
+<p>Use Plan mode when the task is ambiguous or high risk:</p>
+
+<pre><code class="language-text">
+/plan Propose the implementation steps and verification strategy. Do not modify files yet.
+</code></pre>
+
+<p>Use Goal mode for longer work:</p>
+
+<pre><code class="language-text">
+/goal Migrate this project to TypeScript. The app should compile in strict mode without explicit any types.
+</code></pre>
+
+<p>Good goals are specific and measurable.</p>
+
+<h2 id="8-approvals-sandboxing-and-security">8. Approvals, Sandboxing, and Security</h2>
+
+<p>Codex safety is controlled by two layers:</p>
+
+<ul>
+<li>Sandbox mode: what Codex can technically access or modify.</li>
+<li>Approval policy: when Codex must pause and ask.</li>
+</ul>
+
+<p>Common sandbox modes:</p>
+
+<table>
+<tr><th>Mode</th><th>Behavior</th><th>Use case</th></tr>
+<tr><td><code>read-only</code></td><td>Inspect files without automatic edits</td><td>Research and review</td></tr>
+<tr><td><code>workspace-write</code></td><td>Read and edit inside the workspace</td><td>Default local development</td></tr>
+<tr><td><code>danger-full-access</code></td><td>No sandbox boundary</td><td>Only in externally isolated trusted environments</td></tr>
+</table>
+
+<p>Common approval policies:</p>
+
+<table>
+<tr><th>Policy</th><th>Behavior</th><th>Use case</th></tr>
+<tr><td><code>untrusted</code></td><td>Ask before commands outside the trusted set</td><td>More cautious runs</td></tr>
+<tr><td><code>on-request</code></td><td>Work inside sandbox, ask when crossing boundaries</td><td>Interactive development</td></tr>
+<tr><td><code>never</code></td><td>Do not ask for approvals</td><td>Non-interactive automation with safe constraints</td></tr>
+</table>
+
+<p>Recommended local default:</p>
+
+<pre><code class="language-bash">
+codex --sandbox workspace-write --ask-for-approval on-request
+</code></pre>
+
+<p>Read-only investigation:</p>
+
+<pre><code class="language-bash">
+codex --sandbox read-only --ask-for-approval on-request
+</code></pre>
+
+<p>Network access for commands is normally separate from web search. Enable command network access only when needed:</p>
+
+<pre><code class="language-toml">
+[sandbox_workspace_write]
+network_access = true
+</code></pre>
+
+<h2 id="9-configuration">9. Configuration</h2>
+
+<p>User configuration lives at:</p>
+
+<pre><code class="language-text">
+~/.codex/config.toml
+</code></pre>
+
+<p>Project configuration can live at:</p>
+
+<pre><code class="language-text">
+.codex/config.toml
+</code></pre>
+
+<p>Project config loads only for trusted projects. Precedence is:</p>
+
+<p>1. CLI flags and <code>--config</code>.</p>
+<p>2. Project <code>.codex/config.toml</code>, closest wins.</p>
+<p>3. Selected profile file.</p>
+<p>4. User <code>~/.codex/config.toml</code>.</p>
+<p>5. System config.</p>
+<p>6. Built-in defaults.</p>
+
+<p>Common settings:</p>
+
+<pre><code class="language-toml">
+model = &quot;gpt-5.5&quot;
+model_reasoning_effort = &quot;high&quot;
+approval_policy = &quot;on-request&quot;
+sandbox_mode = &quot;workspace-write&quot;
+web_search = &quot;cached&quot;
+
+[sandbox_workspace_write]
+network_access = false
+
+[features]
+multi_agent = true
+hooks = true
+fast_mode = true
+</code></pre>
+
+<p>One-off overrides:</p>
+
+<pre><code class="language-bash">
+codex --model gpt-5.5
+codex -c model=&#x27;&quot;gpt-5.5&quot;&#x27;
+codex -c sandbox_workspace_write.network_access=true
+</code></pre>
+
+<h2 id="10-models-and-reasoning">10. Models and Reasoning</h2>
+
+<p>According to the refreshed official manual, start with <code>gpt-5.5</code> for most Codex tasks. Use <code>gpt-5.4-mini</code> for faster, lighter tasks or subagents. <code>gpt-5.3-codex-spark</code> is a research preview model for ChatGPT Pro subscribers optimized for near-instant coding iteration.</p>
+
+<p>General guidance:</p>
+
+<table>
+<tr><th>Task</th><th>Suggested setup</th></tr>
+<tr><td>Complex debugging or migration</td><td><code>gpt-5.5</code> with high or xhigh reasoning</td></tr>
+<tr><td>Normal implementation and tests</td><td><code>gpt-5.5</code> with medium or high reasoning</td></tr>
+<tr><td>Fast exploration or supporting subagents</td><td><code>gpt-5.4-mini</code></td></tr>
+<tr><td>Near-real-time text iteration</td><td><code>gpt-5.3-codex-spark</code>, if available</td></tr>
+</table>
+
+<p>Fast mode can increase speed at higher credit consumption:</p>
+
+<pre><code class="language-text">
+/fast on
+/fast off
+/fast status
+</code></pre>
+
+<h2 id="11-codex-app-tips">11. Codex App Tips</h2>
+
+<p>Use Codex App when you want visual workflows:</p>
+
+<ul>
+<li>Local threads edit the current project.</li>
+<li>Worktree threads isolate changes in a Git worktree.</li>
+<li>Cloud threads run remotely.</li>
+<li>The diff pane supports review, comments, staging, reverting, committing, pushing, and pull request creation.</li>
+<li>The integrated terminal lets you run tests and development servers.</li>
+<li>The in-app browser previews local pages and supports browser comments.</li>
+<li>Computer Use can operate desktop apps with approval boundaries.</li>
+</ul>
+
+<p>For front-end work, keep a floating Codex thread next to the browser or preview window and iterate with visual feedback.</p>
+
+<h2 id="12-codex-cli-tips">12. Codex CLI Tips</h2>
+
+<p>Start interactive mode:</p>
+
+<pre><code class="language-bash">
+codex
+codex &quot;Explain this codebase to me&quot;
+</code></pre>
+
+<p>Resume work:</p>
+
+<pre><code class="language-bash">
+codex resume
+codex resume --last
+codex resume --all
+codex resume &lt;SESSION_ID&gt;
+</code></pre>
+
+<p>Run a one-shot task:</p>
+
+<pre><code class="language-bash">
+codex exec &quot;fix the CI failure&quot;
+</code></pre>
+
+<p>Attach images:</p>
+
+<pre><code class="language-bash">
+codex -i screenshot.png &quot;Explain this error&quot;
+codex --image img1.png,img2.jpg &quot;Summarize these diagrams&quot;
+</code></pre>
+
+<p>Useful slash commands:</p>
+
+<table>
+<tr><th>Command</th><th>Purpose</th></tr>
+<tr><td><code>/permissions</code></td><td>Change permission mode</td></tr>
+<tr><td><code>/model</code></td><td>Change model and reasoning</td></tr>
+<tr><td><code>/plan</code></td><td>Plan before editing</td></tr>
+<tr><td><code>/goal</code></td><td>Set or manage a long-running goal</td></tr>
+<tr><td><code>/review</code></td><td>Review the current diff</td></tr>
+<tr><td><code>/diff</code></td><td>Show Git diff</td></tr>
+<tr><td><code>/mention</code></td><td>Attach files or folders</td></tr>
+<tr><td><code>/mcp</code></td><td>List MCP tools</td></tr>
+<tr><td><code>/skills</code></td><td>Use a skill</td></tr>
+<tr><td><code>/compact</code></td><td>Summarize context</td></tr>
+<tr><td><code>/status</code></td><td>Inspect session state</td></tr>
+</table>
+
+<h2 id="13-ide-extension-tips">13. IDE Extension Tips</h2>
+
+<p>The IDE Extension works well when your editor context matters. It can use open files, selected ranges, and <code>@file</code> references.</p>
+
+<p>Example:</p>
+
+<pre><code class="language-text">
+Use @example.tsx as a reference to add a new page named Resources.
+</code></pre>
+
+<p>If Codex seems to miss the current file, check IDE context or explicitly mention the file.</p>
+
+<h2 id="14-cloud-github-slack-and-linear">14. Cloud, GitHub, Slack, and Linear</h2>
+
+<p>Codex Cloud is useful for long-running or parallel tasks. It requires a configured cloud environment and a GitHub repository.</p>
+
+<p>CLI:</p>
+
+<pre><code class="language-bash">
+codex cloud
+codex cloud exec --env ENV_ID &quot;Summarize open bugs&quot;
+</code></pre>
+
+<p>GitHub PR review:</p>
+
+<pre><code class="language-md">
+@codex review
+</code></pre>
+
+<p>Ask Codex to fix a finding:</p>
+
+<pre><code class="language-md">
+@codex fix the P1 issue
+</code></pre>
+
+<p>Slack and Linear can start cloud tasks from comments or threads when their connectors are configured.</p>
+
+<h2 id="15-agents-md">15. AGENTS.md</h2>
+
+<p><code>AGENTS.md</code> is durable guidance for Codex. Use it for repository-specific commands, conventions, review expectations, and verification steps.</p>
+
+<p>Good contents:</p>
+
+<ul>
+<li>Repository layout.</li>
+<li>Install, build, test, lint commands.</li>
+<li>Coding style.</li>
+<li>Pull request expectations.</li>
+<li>Security constraints.</li>
+<li>Done criteria.</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code class="language-md">
+# AGENTS.md
+
+## Repository expectations
+
+- Use pnpm, not npm.
+- Run `pnpm typecheck` after TypeScript changes.
+- Do not change public APIs unless explicitly requested.
+- Explain before adding production dependencies.
+
+## Review guidelines
+
+- Prioritize correctness, security, regressions, and missing tests.
+- Do not raise style-only comments as high-priority findings.
+</code></pre>
+
+<p>When Codex repeats the same mistake, ask for a retrospective and update <code>AGENTS.md</code>.</p>
+
+<h2 id="16-skills-plugins-mcp-hooks-and-rules">16. Skills, Plugins, MCP, Hooks, and Rules</h2>
+
+<p>Skills package reusable task workflows:</p>
+
+<pre><code class="language-text">
+$skill-creator
+</code></pre>
+
+<p>Use Skills for repeated workflows such as document generation, security scanning, framework migrations, or release checks.</p>
+
+<p>Plugins are installable bundles that can include skills, MCP configuration, hooks, app mappings, and assets:</p>
+
+<pre><code class="language-text">
+$plugin-creator
+</code></pre>
+
+<p>MCP connects Codex to external tools and private context:</p>
+
+<pre><code class="language-toml">
+[mcp_servers.context7]
+command = &quot;npx&quot;
+args = [&quot;-y&quot;, &quot;@upstash/context7-mcp&quot;]
+</code></pre>
+
+<p>HTTP MCP server:</p>
+
+<pre><code class="language-toml">
+[mcp_servers.figma]
+url = &quot;https://mcp.figma.com/mcp&quot;
+bearer_token_env_var = &quot;FIGMA_OAUTH_TOKEN&quot;
+</code></pre>
+
+<p>Hooks run lifecycle checks around tool use. Rules can allow, prompt, or forbid command prefixes outside the sandbox. Use them for repeatable safety and team policy.</p>
+
+<h2 id="17-automations-and-subagents">17. Automations and Subagents</h2>
+
+<p>Automations are scheduled checks, reminders, monitors, or recurring follow-ups. Use thread automations when future runs depend on the same conversation context.</p>
+
+<p>Subagents help parallelize read-heavy work:</p>
+
+<pre><code class="language-text">
+Review this branch with parallel subagents. Spawn one agent for security risks, one for correctness regressions, and one for test gaps. Wait for all three, then summarize findings with file references.
+</code></pre>
+
+<p>Subagents use more tokens. They are best for exploration, triage, review, and summarization. Be careful with parallel write-heavy workflows.</p>
+
+<h2 id="18-windows-notes">18. Windows Notes</h2>
+
+<p>Codex supports Windows through the native Codex App, CLI, IDE Extension, and WSL2.</p>
+
+<p>Recommended native Windows sandbox:</p>
+
+<pre><code class="language-toml">
+[windows]
+sandbox = &quot;elevated&quot;
+</code></pre>
+
+<p>Fallback:</p>
+
+<pre><code class="language-toml">
+[windows]
+sandbox = &quot;unelevated&quot;
+</code></pre>
+
+<p>Use WSL2 when your toolchain is Linux-native. Keep repositories under the WSL home directory for better performance:</p>
+
+<pre><code class="language-bash">
+mkdir -p ~/code
+cd ~/code
+</code></pre>
+
+<p>If the Windows sandbox cannot read a directory:</p>
+
+<pre><code class="language-text">
+/sandbox-add-read-dir C:\absolute\directory\path
+</code></pre>
+
+<h2 id="19-prompt-templates">19. Prompt Templates</h2>
+
+<p>Feature work:</p>
+
+<pre><code class="language-text">
+Goal:
+Implement &lt;feature&gt;.
+
+Context:
+- Entry files: @...
+- Similar implementation: @...
+- Requirements: ...
+
+Constraints:
+- Reuse existing components and helpers
+- Do not change public APIs
+- Do not add dependencies unless you explain why first
+
+Done when:
+- Add or update tests
+- Run &lt;command&gt;
+- Summarize changes and verification
+</code></pre>
+
+<p>Debugging:</p>
+
+<pre><code class="language-text">
+Problem:
+&lt;behavior&gt;
+
+Reproduction:
+1. ...
+2. ...
+
+Error/log:
+</code></pre>
+<p>&lt;paste error&gt;</p>
+<pre><code class="language-">
+
+Constraints:
+- ...
+
+Find the root cause first, then make the smallest safe fix and rerun the relevant check.
+</code></pre>
+
+<p>Review:</p>
+
+<pre><code class="language-text">
+Review the current diff. Prioritize correctness, security, regressions, and missing tests. Report findings by severity with file and line references. If there are no issues, say that clearly and list any remaining test gaps.
+</code></pre>
+
+<h2 id="20-troubleshooting">20. Troubleshooting</h2>
+
+<p>Codex missed the right files:</p>
+
+<ul>
+<li>Start from the repository root.</li>
+<li>Mention files with <code>@</code> or <code>/mention</code>.</li>
+<li>Check IDE context.</li>
+<li>Confirm the App project points at the right folder.</li>
+</ul>
+
+<p>Codex is going in the wrong direction:</p>
+
+<ul>
+<li>Ask it to restate the goal and constraints.</li>
+<li>Switch to <code>/plan</code>.</li>
+<li>Give examples of what to follow.</li>
+<li>Narrow the task.</li>
+</ul>
+
+<p>Commands fail:</p>
+
+<ul>
+<li>Check sandbox mode.</li>
+<li>Check network access.</li>
+<li>Check working directory.</li>
+<li>Check missing dependencies.</li>
+<li>Check approval policy.</li>
+</ul>
+
+<p>MCP tools are unavailable:</p>
+
+<ul>
+<li>Verify <code>config.toml</code>.</li>
+<li>Confirm OAuth login.</li>
+<li>Check environment variables and shell environment policy.</li>
+<li>Confirm <code>enabled_tools</code> / <code>disabled_tools</code>.</li>
+<li>Restart Codex after config changes.</li>
+</ul>
+
+<h2 id="21-official-sources">21. Official Sources</h2>
+
+<ul>
+<li><a href="https://developers.openai.com/codex/overview">Codex overview</a></li>
+<li><a href="https://developers.openai.com/codex/prompting">Codex prompting</a></li>
+<li><a href="https://developers.openai.com/codex/workflows">Codex workflows</a></li>
+<li><a href="https://developers.openai.com/codex/learn/best-practices">Best practices</a></li>
+<li><a href="https://developers.openai.com/codex/agent-approvals-security">Agent approvals and security</a></li>
+<li><a href="https://developers.openai.com/codex/concepts/sandboxing">Sandboxing</a></li>
+<li><a href="https://developers.openai.com/codex/config-basic">Config basics</a></li>
+<li><a href="https://developers.openai.com/codex/config-advanced">Advanced configuration</a></li>
+<li><a href="https://developers.openai.com/codex/models">Codex models</a></li>
+<li><a href="https://developers.openai.com/codex/cli">Codex CLI</a></li>
+<li><a href="https://developers.openai.com/codex/cli/slash-commands">CLI slash commands</a></li>
+<li><a href="https://developers.openai.com/codex/app">Codex App</a></li>
+<li><a href="https://developers.openai.com/codex/app/features">Codex app features</a></li>
+<li><a href="https://developers.openai.com/codex/ide">Codex IDE extension</a></li>
+<li><a href="https://developers.openai.com/codex/guides/agents-md">AGENTS.md guide</a></li>
+<li><a href="https://developers.openai.com/codex/skills">Agent Skills</a></li>
+<li><a href="https://developers.openai.com/codex/plugins">Plugins</a></li>
+<li><a href="https://developers.openai.com/codex/plugins/build">Build plugins</a></li>
+<li><a href="https://developers.openai.com/codex/mcp">Model Context Protocol</a></li>
+<li><a href="https://developers.openai.com/codex/rules">Rules</a></li>
+<li><a href="https://developers.openai.com/codex/hooks">Hooks</a></li>
+<li><a href="https://developers.openai.com/codex/subagents">Subagents</a></li>
+<li><a href="https://developers.openai.com/codex/windows">Windows</a></li>
+</ul></main>
+  </div>
+</body>
+</html>

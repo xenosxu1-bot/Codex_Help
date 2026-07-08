@@ -8,8 +8,9 @@ An unofficial bilingual quick-start and practical guide for OpenAI Codex.
 
 ## 语言 / Languages
 
-- [中文教程](docs/zh-CN.md)
-- [English Guide](docs/en-US.md)
+- [中文教程（左侧目录版）](https://xenosxu1-bot.github.io/Codex_Help/zh-CN.html)
+- [English Guide with left outline](https://xenosxu1-bot.github.io/Codex_Help/en-US.html)
+- Markdown 原文 / Markdown source: [中文](docs/zh-CN.md) / [English](docs/en-US.md)
 
 ## 项目目标 / Project Goal
 

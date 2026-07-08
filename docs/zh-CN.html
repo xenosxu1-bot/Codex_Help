@@ -1,0 +1,1741 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AGENTS.md</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --link: #0969da;
+      --side: #f8fafc;
+      --accent: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.7;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 28px 20px;
+      background: var(--side);
+      border-right: 1px solid var(--line);
+    }
+    aside h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      color: var(--accent);
+    }
+    .lang-switch {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 22px;
+    }
+    .lang {
+      display: inline-flex;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--link);
+      text-decoration: none;
+      background: #fff;
+      font-size: 14px;
+    }
+    .lang.active {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    nav a {
+      display: block;
+      padding: 7px 8px;
+      border-radius: 8px;
+      color: var(--link);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    nav a:hover {
+      background: #eef2ff;
+      text-decoration: underline;
+    }
+    main {
+      width: min(980px, 100%);
+      padding: 38px 44px 80px;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 34px;
+      line-height: 1.25;
+      color: var(--accent);
+    }
+    h2 {
+      margin-top: 42px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 26px;
+      color: var(--accent);
+      scroll-margin-top: 20px;
+    }
+    h3 { margin-top: 28px; font-size: 20px; }
+    a { color: var(--link); }
+    img {
+      max-width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 12px 0 18px;
+    }
+    code {
+      padding: 0.1em 0.35em;
+      border-radius: 5px;
+      background: #f1f5f9;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    }
+    pre {
+      overflow: auto;
+      padding: 16px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    pre code { padding: 0; background: transparent; color: inherit; }
+    blockquote {
+      margin: 16px 0;
+      padding: 10px 16px;
+      border-left: 4px solid #94a3b8;
+      color: var(--muted);
+      background: #f8fafc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      vertical-align: top;
+    }
+    th { background: #f8fafc; }
+    @media (max-width: 900px) {
+      .layout { display: block; }
+      aside {
+        position: static;
+        height: auto;
+        max-height: 45vh;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      main { padding: 28px 18px 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <h2>目录 / Outline</h2>
+      <div class="lang-switch"><a class="lang active" href="zh-CN.html">中文</a><a class="lang" href="en-US.html">English</a></div>
+      <nav><a href="#1-codex">1. Codex 是什么</a>
+<a href="#2-codex">2. 你可以用 Codex 做什么</a>
+<a href="#3">3. 选择合适的使用入口</a>
+<a href="#3-1-codex">3.1 Codex 界面图速览</a>
+<a href="#4">4. 第一次使用的推荐流程</a>
+<a href="#5-codex">5. 写好提示词：让 Codex 更稳定</a>
+<a href="#6">6. 常见工作流范例</a>
+<a href="#7-plan-mode-goal-mode">7. 线程、上下文、Plan mode 与 Goal mode</a>
+<a href="#8">8. 权限、沙箱与安全</a>
+<a href="#9-config-toml">9. 配置文件 config.toml</a>
+<a href="#10">10. 模型、推理强度与速度</a>
+<a href="#11-codex-app">11. Codex App 使用技巧</a>
+<a href="#12-codex-cli">12. Codex CLI 使用技巧</a>
+<a href="#13-ide">13. IDE 扩展使用技巧</a>
+<a href="#14-cloud-github-slack-linear">14. Cloud、GitHub、Slack 与 Linear</a>
+<a href="#review-guidelines">Review guidelines</a>
+<a href="#15-agents-md-codex">15. AGENTS.md：把项目规则写给 Codex</a>
+<a href="#repository-expectations">Repository expectations</a>
+<a href="#review-guidelines">Review guidelines</a>
+<a href="#16-skills">16. Skills：复用任务工作流</a>
+<a href="#17-plugins-mcp">17. Plugins：分发技能、MCP 与集成</a>
+<a href="#18-mcp">18. MCP：连接外部工具和私有上下文</a>
+<a href="#19-hooks-rules">19. Hooks、Rules 与团队治理</a>
+<a href="#20">20. 自动化、子代理与长任务</a>
+<a href="#21-windows">21. Windows 使用建议</a>
+<a href="#22">22. 实战提示词模板</a>
+<a href="#23">23. 排错清单</a>
+<a href="#24">24. 官方资料索引</a>
+<a href="#section-29">最后建议</a></nav>
+    </aside>
+    <main><h1>Codex 主要功能与使用技巧中文教程</h1>
+
+<blockquote>版本说明：本文是非官方学习教程，根据 OpenAI Codex 官方手册整理，资料抓取时间为 2026-07-08。Codex 功能、模型、套餐和成熟度标签会随产品更新而变化，涉及价格、可用模型、企业策略时请以官方页面为准。</blockquote>
+
+<h2 id="1-codex">1. Codex 是什么</h2>
+
+<p>Codex 是 OpenAI 面向软件开发的 coding agent。它不是只回答问题的聊天助手，而是可以读取项目、编辑文件、运行命令、分析错误、写测试、审查 diff，并在需要时调用外部工具的开发协作者。</p>
+
+<p>官方定位里，Codex 主要覆盖这些能力：</p>
+
+<ul>
+<li>写代码：根据你的意图生成代码，并尽量贴合现有项目结构和风格。</li>
+<li>理解代码库：阅读复杂或遗留项目，解释模块职责、调用链、数据流和风险点。</li>
+<li>代码审查：识别潜在 bug、逻辑错误、遗漏边界条件和高风险改动。</li>
+<li>调试修复：根据复现步骤、日志和测试失败定位原因并提交补丁。</li>
+<li>自动化开发任务：执行重构、迁移、测试、环境检查、报告生成等重复流程。</li>
+</ul>
+
+<p>一个实用的理解方式是：Codex 最适合承担“可以被验证的开发任务”。你给它目标、上下文、约束和完成标准，它负责探索、修改、验证、汇报。</p>
+
+<h2 id="2-codex">2. 你可以用 Codex 做什么</h2>
+
+<h3>代码生成与功能实现</h3>
+
+<p>适合任务：</p>
+
+<ul>
+<li>新增页面、接口、命令行参数或组件。</li>
+<li>按现有模式补齐业务逻辑。</li>
+<li>从设计稿、截图或需求说明实现原型。</li>
+<li>添加错误处理、边界条件和空状态。</li>
+</ul>
+
+<p>建议让 Codex 先读取相邻文件、现有测试和项目约定。不要只说“加一个功能”，最好告诉它功能入口、期望行为、不能改动的接口和验证方式。</p>
+
+<h3>代码理解与系统梳理</h3>
+
+<p>适合任务：</p>
+
+<ul>
+<li>新人上手一个仓库。</li>
+<li>弄清请求链路、状态流、数据模型和依赖关系。</li>
+<li>解释某个函数为什么这样写。</li>
+<li>找出修改某个模块可能影响哪些地方。</li>
+</ul>
+
+<p>技巧：让 Codex 输出“文件列表 + 调用链 + 风险点 + 建议阅读顺序”。这比单纯让它“解释代码”更容易落到可验证的结构。</p>
+
+<h3>Debug 与故障修复</h3>
+
+<p>适合任务：</p>
+
+<ul>
+<li>修复失败测试。</li>
+<li>复现 UI 或接口 bug。</li>
+<li>分析堆栈、日志、CI 输出。</li>
+<li>处理依赖升级后的破坏性变化。</li>
+</ul>
+
+<p>高质量 bug prompt 应包含：</p>
+
+<ul>
+<li>现象：用户看到什么，系统哪里不对。</li>
+<li>复现步骤：如何稳定触发。</li>
+<li>期望行为：正确结果是什么。</li>
+<li>约束：哪些 API、数据结构或兼容行为不能变。</li>
+<li>验证：修完后要跑哪些测试或手工检查。</li>
+</ul>
+
+<h3>测试与质量检查</h3>
+
+<p>Codex 可以：</p>
+
+<ul>
+<li>补单元测试、集成测试、回归测试。</li>
+<li>运行 lint、format、typecheck、test。</li>
+<li>根据失败输出继续修复。</li>
+<li>做本地 diff review，给出优先级明确的问题列表。</li>
+</ul>
+
+<p>建议在任务结尾明确写：“完成后运行最小相关测试，并报告命令和结果。”</p>
+
+<h3>代码审查</h3>
+
+<p>Codex 的 review 模式适合在提交前查：</p>
+
+<ul>
+<li>正确性问题。</li>
+<li>回归风险。</li>
+<li>安全问题。</li>
+<li>缺失测试。</li>
+<li>可维护性问题。</li>
+</ul>
+
+<p>在 CLI 中可用 <code>/review</code>，在 Codex App 中可用 diff/review 面板，也可以在 GitHub PR 中通过 <code>@codex review</code> 触发云端审查。</p>
+
+<h3>非代码文件与交付物</h3>
+
+<p>在 Codex App 中，Codex 可以预览或生成 PDF、表格、文档、演示文稿等非代码产物。给这类任务时要说明：</p>
+
+<ul>
+<li>输出文件类型。</li>
+<li>内容结构。</li>
+<li>格式要求。</li>
+<li>检查标准。</li>
+<li>保存位置。</li>
+</ul>
+
+<h2 id="3">3. 选择合适的使用入口</h2>
+
+<p>Codex 主要有几种使用形态。选择哪个入口，取决于你要做的任务和上下文在哪里。</p>
+
+<table>
+<tr><th>入口</th><th>适合场景</th><th>主要优势</th><th>注意事项</th></tr>
+<tr><td>Codex App</td><td>桌面端多线程工作、可视化 review、工作树、自动化、浏览器预览</td><td>图形界面、并行任务、Git 工具、内置终端、浏览器和 artifact 预览</td><td>非代码研究也可用 projectless chat</td></tr>
+<tr><td>CLI</td><td>终端开发、脚本化、远程机器、CI 风格任务</td><td>快、可组合、适合 <code>codex exec</code> 自动化</td><td>需要更明确地给文件路径和命令上下文</td></tr>
+<tr><td>IDE 扩展</td><td>边看代码边提问、选中代码解释、编辑器内修改</td><td>自动带入打开文件和选中代码，适合短反馈循环</td><td>注意 IDE context 是否开启</td></tr>
+<tr><td>Cloud</td><td>并行、异步、远程执行、从 Slack/Linear/GitHub 委派任务</td><td>不占本机，适合多个任务同时跑</td><td>需要 GitHub 仓库和 cloud environment</td></tr>
+<tr><td>GitHub 集成</td><td>PR 审查、PR 修复</td><td>在 PR 里直接 <code>@codex review</code> 或 <code>@codex fix...</code></td><td>需要启用 Codex cloud 和代码审查设置</td></tr>
+<tr><td>Slack/Linear</td><td>从协作工具委派任务</td><td>少切换上下文，适合团队流程</td><td>需要连接器和环境配置</td></tr>
+</table>
+
+<p>简单判断：</p>
+
+<ul>
+<li>正在编辑代码：优先 IDE 扩展或 App。</li>
+<li>想在终端快速做事：用 CLI。</li>
+<li>想跑长任务或并行多个方案：用 Cloud 或 App worktree。</li>
+<li>想让它审 PR：用 GitHub 集成或本地 <code>/review</code>。</li>
+<li>想把重复流程产品化：用 Skills 或 Plugins。</li>
+</ul>
+
+<h2 id="3-1-codex">3.1 Codex 界面图速览</h2>
+
+<p>这一节放几张官方界面图，帮助你把后面提到的 App、CLI、IDE、浏览器预览、自动化和 artifact 预览对应到真实界面。图片文件已下载到本文同目录下的 <code>assets/images/</code> 文件夹，离线打开 Markdown 时也能查看。</p>
+
+<h3>Codex App：线程、任务与代码审查界面</h3>
+
+<p><img src="assets/images/codex-app-review-pane.webp" alt="Codex App review pane" loading="lazy"></p>
+
+<p>Codex App 是桌面端主工作台。左侧用于管理项目和线程，中间是对话和任务过程，右侧可以显示 diff、review、文件预览或相关上下文。适合多线程开发、查看 Codex 改动、加行内反馈、提交和推送代码。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/app">Codex App</a></p>
+
+<h3>Codex CLI：终端里的交互式 agent</h3>
+
+<p><img src="assets/images/codex-cli-splash.png" alt="Codex CLI splash" loading="lazy"></p>
+
+<p>CLI 适合终端用户、远程环境、脚本化任务和非交互执行。它可以在 TUI 中展示计划、命令、diff、审批提示和最终结果，也可以通过 <code>codex exec</code> 直接跑一次性任务。</p>
+
+<p>来源：<a href="https://github.com/openai/codex">OpenAI Codex GitHub repository</a></p>
+
+<h3>Codex IDE Extension：编辑器侧边栏与代码上下文</h3>
+
+<p><img src="assets/images/codex-ide-extension.webp" alt="Codex IDE extension" loading="lazy"></p>
+
+<p>IDE 扩展把 Codex 放进 VS Code 兼容编辑器。它能利用打开文件、选中代码和编辑器上下文，因此适合“边看代码边问”“选中一段让它解释/修改”“从 TODO 直接生成实现”等短反馈循环。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/ide">Codex IDE Extension</a></p>
+
+<h3>In-app Browser：本地页面预览和浏览器操作</h3>
+
+<p><img src="assets/images/codex-in-app-browser.webp" alt="Codex in-app browser" loading="lazy"></p>
+
+<p>In-app browser 适合预览本地开发服务器、检查页面布局、让 Codex 操作页面做 UI 验证。它和你的常规浏览器 profile 隔离，不共享登录态、cookies、扩展或已打开标签。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/app/browser">In-app browser</a></p>
+
+<h3>Browser Comments：在页面上标注具体反馈</h3>
+
+<p><img src="assets/images/codex-browser-annotations.webp" alt="Codex browser annotations" loading="lazy"></p>
+
+<p>浏览器评论可以把反馈绑定到页面区域。做前端时，你可以在按钮、卡片、表单或布局错位处直接标注，再让 Codex 根据这些可视化反馈修改代码。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/app/browser">In-app browser</a></p>
+
+<h3>Artifact Viewer：预览文档、表格、PDF 和演示稿</h3>
+
+<p><img src="assets/images/codex-artifact-viewer.webp" alt="Codex artifact viewer" loading="lazy"></p>
+
+<p>Codex App 可以预览非代码产物，例如 PDF、文档、表格和演示文稿。适合让 Codex 生成报告、整理表格、制作材料，并在同一工作区内检查结果。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/app/features">Codex App features</a></p>
+
+<h3>Automations：定时或周期性任务</h3>
+
+<p><img src="assets/images/codex-automations.webp" alt="Codex automations" loading="lazy"></p>
+
+<p>Automations 用于周期性检查、提醒、监控或后续工作。若任务依赖当前 thread 的上下文，使用 thread automation；若希望每次新开任务，使用独立或项目自动化。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/app/automations">Codex Automations</a></p>
+
+<h3>Floating Pop-out：把当前线程悬浮到工作区旁边</h3>
+
+<p><img src="assets/images/codex-popout-window.webp" alt="Codex floating pop-out" loading="lazy"></p>
+
+<p>浮动窗口适合前端、桌面 app 或设计调试。你可以把 Codex 放在浏览器、编辑器或预览窗口旁边，边看结果边继续给反馈。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/app/features">Codex App features</a></p>
+
+<h3>Browser Developer Mode：更深入的浏览器调试</h3>
+
+<p><img src="assets/images/codex-browser-developer-mode.webp" alt="Codex browser developer mode" loading="lazy"></p>
+
+<p>浏览器 Developer mode 可启用更完整的 Chrome DevTools Protocol 访问，用于性能分析和更深层的浏览器调试。它扩大了能力边界，团队环境中可能受管理员策略限制。</p>
+
+<p>来源：<a href="https://developers.openai.com/codex/app/browser">In-app browser</a></p>
+
+<h2 id="4">4. 第一次使用的推荐流程</h2>
+
+<h3>第一步：从仓库根目录启动</h3>
+
+<p>CLI：</p>
+
+<pre><code class="language-bash">
+cd path/to/your-repo
+codex
+</code></pre>
+
+<p>Codex App：添加项目时选择仓库根目录。</p>
+
+<p>IDE：打开仓库根目录，并确保 Codex 扩展连接的是当前 workspace。</p>
+
+<h3>第二步：先让 Codex 认识项目</h3>
+
+<p>可以这样问：</p>
+
+<pre><code class="language-text">
+请先阅读这个项目的结构，找出构建、测试、lint 命令，以及主要源码目录。
+不要修改文件。最后给我一份上手摘要和你建议写入 AGENTS.md 的项目规则。
+</code></pre>
+
+<h3>第三步：生成或完善 AGENTS.md</h3>
+
+<p>CLI 中可用：</p>
+
+<pre><code class="language-text">
+/init
+</code></pre>
+
+<p>然后让 Codex 根据真实项目补充：</p>
+
+<pre><code class="language-text">
+请基于 package.json、README、测试目录和现有 CI，完善 AGENTS.md。
+重点写清楚：项目结构、常用命令、代码风格、测试要求、不要做的事。
+</code></pre>
+
+<h3>第四步：从小而可验证的任务开始</h3>
+
+<p>不要一上来让 Codex “重构整个系统”。先让它做一个可以测试的小任务：</p>
+
+<pre><code class="language-text">
+修复这个失败测试：&lt;粘贴错误&gt;
+约束：不要改变公开 API。
+完成后运行这个测试文件，并解释根因。
+</code></pre>
+
+<h3>第五步：养成“实现 + 验证 + review”的闭环</h3>
+
+<p>每个任务尽量包含：</p>
+
+<ul>
+<li>实现或修复。</li>
+<li>运行相关检查。</li>
+<li>查看 diff。</li>
+<li>让 Codex 自审一次。</li>
+<li>你再人工确认。</li>
+</ul>
+
+<h2 id="5-codex">5. 写好提示词：让 Codex 更稳定</h2>
+
+<p>官方最佳实践建议，一个好 prompt 通常包含四类信息：</p>
+
+<p>1. Goal：你要改变或构建什么。</p>
+<p>2. Context：哪些文件、错误、截图、设计、日志相关。</p>
+<p>3. Constraints：架构、安全、兼容性、风格、不能改的地方。</p>
+<p>4. Done when：什么条件代表完成，比如测试通过、bug 不再复现、UI 达到截图效果。</p>
+
+<h3>好 prompt 的基本格式</h3>
+
+<pre><code class="language-text">
+目标：
+&lt;一句话说明要完成什么&gt;
+
+上下文：
+- 相关文件：@src/foo.ts @src/foo.test.ts
+- 当前问题：&lt;错误、日志、截图或行为&gt;
+- 现有约定：&lt;项目模式或文档&gt;
+
+约束：
+- 不改变公开 API
+- 不引入新依赖，除非先说明原因
+- 保持现有代码风格
+
+完成标准：
+- 添加或更新测试
+- 运行 &lt;具体命令&gt;
+- 最后汇报改了什么、如何验证
+</code></pre>
+
+<h3>任务越复杂，越应该先计划</h3>
+
+<p>适合先 <code>/plan</code> 的情况：</p>
+
+<ul>
+<li>需求模糊。</li>
+<li>涉及多个模块。</li>
+<li>可能需要迁移数据或升级依赖。</li>
+<li>修改有安全或兼容风险。</li>
+<li>你还没决定方案。</li>
+</ul>
+
+<p>示例：</p>
+
+<pre><code class="language-text">
+/plan 我想把这个服务的配置加载逻辑从环境变量散落读取，改成集中 schema 校验。
+请先调查现状，列出迁移步骤、风险、测试策略。先不要改文件。
+</code></pre>
+
+<h3>让 Codex 采访你</h3>
+
+<p>当你只有模糊想法时，可以直接说：</p>
+
+<pre><code class="language-text">
+我有个模糊需求：想改善这个 dashboard 的性能。
+先不要写代码。请先问我最多 8 个关键问题，帮我把目标、指标、范围和验收标准具体化。
+</code></pre>
+
+<h3>明确验证方式</h3>
+
+<p>Codex 在能验证时通常表现更好。可以写：</p>
+
+<pre><code class="language-text">
+完成后请运行：
+- npm run lint
+- npm test -- src/foo.test.ts
+如果某个命令失败，先判断是否与你的改动有关，再决定是否修复。
+</code></pre>
+
+<h2 id="6">6. 常见工作流范例</h2>
+
+<h3>解释代码库</h3>
+
+<pre><code class="language-text">
+请阅读这个仓库，解释一个请求从入口到数据库的完整链路。
+输出：
+1. 关键文件和职责
+2. 请求流步骤
+3. 数据校验发生在哪里
+4. 修改这条链路时最容易踩的坑
+</code></pre>
+
+<h3>修复 bug</h3>
+
+<pre><code class="language-text">
+Bug：设置页点击 Save 后显示保存成功，但刷新后开关恢复原值。
+
+复现：
+1. npm run dev
+2. 打开 /settings
+3. 切换 Enable alerts
+4. 点击 Save
+5. 刷新页面，开关恢复
+
+约束：
+- 不改变后端 API shape
+- 保持当前 UI 文案
+- 如可行，添加回归测试
+
+请先复现或静态追踪根因，再提交最小修复并运行相关测试。
+</code></pre>
+
+<h3>写测试</h3>
+
+<pre><code class="language-text">
+请为 @src/transform.ts 中的 invertList 添加单元测试。
+覆盖：
+- 正常路径
+- 空数组
+- 单元素
+- 输入包含重复值
+遵循现有测试风格，不要引入新测试框架。
+</code></pre>
+
+<h3>从截图实现 UI</h3>
+
+<pre><code class="language-text">
+请根据这张截图实现页面。
+要求：
+- 复用现有组件和 design tokens
+- 保持响应式
+- 不写营销落地页，要实现可用的实际界面
+- 完成后启动 dev server，并用浏览器截图检查桌面和移动端
+</code></pre>
+
+<h3>本地 review</h3>
+
+<pre><code class="language-text">
+/review
+</code></pre>
+
+<p>或：</p>
+
+<pre><code class="language-text">
+请审查当前未提交改动。
+重点关注：正确性、回归风险、安全、缺失测试。
+按严重程度排序，给出文件和行号。不要只做风格建议。
+</code></pre>
+
+<h2 id="7-plan-mode-goal-mode">7. 线程、上下文、Plan mode 与 Goal mode</h2>
+
+<h3>Thread 是一次连续工作会话</h3>
+
+<p>一个 thread 包含你的提示、Codex 的模型输出、工具调用和后续追问。你可以在同一 thread 里先实现，再让它补测试，再让它 review。</p>
+
+<p>注意：可以同时运行多个 thread，但不要让两个 thread 同时修改同一批文件，否则容易产生冲突。</p>
+
+<h3>本地线程与云线程</h3>
+
+<p>本地线程：</p>
+
+<ul>
+<li>在你的机器上运行。</li>
+<li>可以读写你的工作区文件。</li>
+<li>可以运行本地命令。</li>
+<li>受本地沙箱和审批策略限制。</li>
+</ul>
+
+<p>云线程：</p>
+
+<ul>
+<li>在隔离的 OpenAI 托管环境运行。</li>
+<li>会克隆 GitHub 仓库并 checkout 分支。</li>
+<li>适合并行、异步或从其他设备委派任务。</li>
+<li>需要先把代码推到 GitHub，并配置 cloud environment。</li>
+</ul>
+
+<h3>上下文与自动压缩</h3>
+
+<p>Codex 会把提示、文件内容、命令输出、已完成步骤等放进模型上下文。长任务可能触发自动 compact：把前文摘要保留，把不重要内容丢掉。你也可以用 <code>/compact</code> 主动整理上下文。</p>
+
+<h3>Plan mode</h3>
+
+<p>Plan mode 适合复杂任务的前置分析。可用方式：</p>
+
+<pre><code class="language-text">
+/plan
+</code></pre>
+
+<p>或：</p>
+
+<pre><code class="language-text">
+/plan 请先调查这个模块的认证流程，提出改造方案，不要修改文件。
+</code></pre>
+
+<h3>Goal mode</h3>
+
+<p>Goal mode 给 Codex 一个持续目标，适合长任务。可用：</p>
+
+<pre><code class="language-text">
+/goal 将这个项目从 JavaScript 迁移到 TypeScript，并确保 strict mode 下无显式 any。
+</code></pre>
+
+<p>好 goal 应该可判断是否完成：</p>
+
+<ul>
+<li>有明确成果。</li>
+<li>有可测指标。</li>
+<li>有完成标准。</li>
+</ul>
+
+<p>如果目标还不清楚，先 <code>/plan</code>，让 Codex 帮你把 goal 写清楚。</p>
+
+<h2 id="8">8. 权限、沙箱与安全</h2>
+
+<p>Codex 的安全控制主要由两层组成：</p>
+
+<ul>
+<li>Sandbox mode：技术上允许 Codex 访问哪里、写哪里、是否能联网。</li>
+<li>Approval policy：什么时候必须停下来请你批准。</li>
+</ul>
+
+<h3>常见沙箱模式</h3>
+
+<table>
+<tr><th>模式</th><th>行为</th><th>适合场景</th></tr>
+<tr><td><code>read-only</code></td><td>主要读取和分析，不自动改文件</td><td>代码审阅、调研、不确定是否信任项目</td></tr>
+<tr><td><code>workspace-write</code></td><td>可在工作区内读写并运行常规命令</td><td>日常开发默认推荐</td></tr>
+<tr><td><code>danger-full-access</code></td><td>不受沙箱限制</td><td>只在外部环境已隔离且你完全信任任务时使用</td></tr>
+</table>
+
+<h3>常见审批策略</h3>
+
+<table>
+<tr><th>策略</th><th>行为</th><th>适合场景</th></tr>
+<tr><td><code>untrusted</code></td><td>对不在可信集内的命令请求审批</td><td>不熟悉项目或更谨慎的环境</td></tr>
+<tr><td><code>on-request</code></td><td>沙箱内自动执行，越界时询问</td><td>日常交互式开发</td></tr>
+<tr><td><code>never</code></td><td>不弹审批，Codex 尽力在限制内完成</td><td>非交互自动化或你已设置好安全边界</td></tr>
+</table>
+
+<h3>推荐默认组合</h3>
+
+<p>日常本地开发：</p>
+
+<pre><code class="language-bash">
+codex --sandbox workspace-write --ask-for-approval on-request
+</code></pre>
+
+<p>只读调研：</p>
+
+<pre><code class="language-bash">
+codex --sandbox read-only --ask-for-approval on-request
+</code></pre>
+
+<p>谨慎使用 full access：</p>
+
+<pre><code class="language-bash">
+codex --sandbox danger-full-access --ask-for-approval never
+</code></pre>
+
+<p>Full access 会扩大风险边界。除非任务和环境都可信，否则优先用工作区沙箱加规则例外。</p>
+
+<h3>网络访问</h3>
+
+<p>默认本地 <code>workspace-write</code> 下，命令网络访问通常是关闭的。需要时可在 <code>config.toml</code> 中启用：</p>
+
+<pre><code class="language-toml">
+[sandbox_workspace_write]
+network_access = true
+</code></pre>
+
+<p>如果只需要查资料，Codex 的 web search 与命令级网络访问是不同层面的能力。不要因为需要查文档就无脑放开所有命令联网。</p>
+
+<h3>Web search 模式</h3>
+
+<pre><code class="language-toml">
+web_search = &quot;cached&quot;   # 默认，使用缓存索引
+# web_search = &quot;live&quot;   # 获取最新网页
+# web_search = &quot;disabled&quot;
+</code></pre>
+
+<p>涉及最新信息时，用 live 或明确让 Codex 浏览；涉及安全敏感任务时，要把网页内容视为不可信输入。</p>
+
+<h2 id="9-config-toml">9. 配置文件 config.toml</h2>
+
+<p>Codex 的本地配置默认在：</p>
+
+<pre><code class="language-text">
+~/.codex/config.toml
+</code></pre>
+
+<p>项目级配置可以放在：</p>
+
+<pre><code class="language-text">
+.codex/config.toml
+</code></pre>
+
+<p>项目配置只在项目被信任时加载。多个配置层的优先级大致是：</p>
+
+<p>1. CLI flags 和 <code>--config</code> 覆盖。</p>
+<p>2. 项目 <code>.codex/config.toml</code>，离当前目录越近优先级越高。</p>
+<p>3. 选中的 profile 文件。</p>
+<p>4. 用户级 <code>~/.codex/config.toml</code>。</p>
+<p>5. 系统配置。</p>
+<p>6. 内置默认值。</p>
+
+<h3>常用配置示例</h3>
+
+<pre><code class="language-toml">
+model = &quot;gpt-5.5&quot;
+model_reasoning_effort = &quot;high&quot;
+approval_policy = &quot;on-request&quot;
+sandbox_mode = &quot;workspace-write&quot;
+web_search = &quot;cached&quot;
+personality = &quot;friendly&quot;
+
+[sandbox_workspace_write]
+network_access = false
+
+[features]
+multi_agent = true
+hooks = true
+fast_mode = true
+</code></pre>
+
+<h3>一次性覆盖</h3>
+
+<pre><code class="language-bash">
+codex --model gpt-5.5
+codex -c model=&#x27;&quot;gpt-5.5&quot;&#x27;
+codex -c sandbox_workspace_write.network_access=true
+</code></pre>
+
+<p>注意：<code>-c</code> 的值按 TOML 解析，字符串通常要额外加引号。</p>
+
+<h3>Profile</h3>
+
+<p>可为特定场景创建 profile：</p>
+
+<pre><code class="language-toml">
+# ~/.codex/deep-review.config.toml
+model = &quot;gpt-5.5&quot;
+model_reasoning_effort = &quot;xhigh&quot;
+approval_policy = &quot;on-request&quot;
+</code></pre>
+
+<p>使用：</p>
+
+<pre><code class="language-bash">
+codex --profile deep-review
+codex exec --profile deep-review &quot;review this change&quot;
+</code></pre>
+
+<h3>环境变量传递</h3>
+
+<p>为避免泄露 secrets，可限制命令子进程能看到哪些环境变量：</p>
+
+<pre><code class="language-toml">
+[shell_environment_policy]
+inherit = &quot;none&quot;
+include_only = [&quot;PATH&quot;, &quot;HOME&quot;]
+exclude = [&quot;AWS_*&quot;, &quot;AZURE_*&quot;]
+</code></pre>
+
+<h2 id="10">10. 模型、推理强度与速度</h2>
+
+<p>官方手册当前建议：大多数 Codex 任务从 <code>gpt-5.5</code> 开始。它适合复杂编码、工具使用、规划、多步执行、电脑操作、知识工作和研究。轻量任务或子代理可考虑 <code>gpt-5.4-mini</code>。<code>gpt-5.3-codex-spark</code> 是面向 ChatGPT Pro 用户的研究预览模型，偏近实时迭代。</p>
+
+<h3>模型选择建议</h3>
+
+<table>
+<tr><th>任务</th><th>推荐</th></tr>
+<tr><td>复杂重构、迁移、调试</td><td><code>gpt-5.5</code> + high 或 xhigh reasoning</td></tr>
+<tr><td>常规实现、补测试</td><td><code>gpt-5.5</code> + medium/high</td></tr>
+<tr><td>快速扫文件、子代理探索</td><td><code>gpt-5.4-mini</code></td></tr>
+<tr><td>近实时文本迭代</td><td><code>gpt-5.3-codex-spark</code>，如账号可用</td></tr>
+</table>
+
+<h3>推理强度</h3>
+
+<pre><code class="language-toml">
+model_reasoning_effort = &quot;high&quot;
+</code></pre>
+
+<p>经验：</p>
+
+<ul>
+<li><code>low</code>：明确、简单、低风险。</li>
+<li><code>medium</code>：多数日常任务。</li>
+<li><code>high</code>：复杂调试、跨模块修改、安全/审查。</li>
+<li><code>xhigh</code>：长任务、迁移、架构级判断。</li>
+</ul>
+
+<h3>Fast mode</h3>
+
+<p>CLI 中可用：</p>
+
+<pre><code class="language-text">
+/fast on
+/fast off
+/fast status
+</code></pre>
+
+<p>Fast mode 会提高速度，但消耗更多 credits。适合你更重视等待时间的交互任务。</p>
+
+<h2 id="11-codex-app">11. Codex App 使用技巧</h2>
+
+<p>Codex App 是桌面端工作台，适合并行处理项目、审查 diff、使用 worktree、运行自动化和预览 artifact。</p>
+
+<h3>Local、Worktree、Cloud 三种模式</h3>
+
+<ul>
+<li>Local：直接在当前项目目录工作。</li>
+<li>Worktree：创建 Git worktree，让改动隔离在独立 checkout 中。</li>
+<li>Cloud：在远程环境运行。</li>
+</ul>
+
+<p>Worktree 适合试验新方案、并行任务、避免污染当前工作区。Automations 在 Git 仓库中通常会使用专用后台 worktree。</p>
+
+<h3>内置 Git 工具</h3>
+
+<p>App 的 diff pane 可以：</p>
+
+<ul>
+<li>查看改动。</li>
+<li>给具体行加反馈。</li>
+<li>stage/unstage。</li>
+<li>revert 文件或 hunk。</li>
+<li>commit、push、创建 PR。</li>
+</ul>
+
+<p>建议在 Codex 完成实现后，让它先自审，再用 diff pane 做人工确认。</p>
+
+<h3>内置终端</h3>
+
+<p>每个 thread 都有项目或 worktree 作用域内的终端。常用：</p>
+
+<pre><code class="language-bash">
+git status
+npm test
+npm run lint
+pnpm test
+</code></pre>
+
+<p>Codex 可以读取当前终端输出，因此你可以先手动运行 dev server 或测试，再让 Codex 根据失败输出继续处理。</p>
+
+<h3>In-app browser</h3>
+
+<p>适合：</p>
+
+<ul>
+<li>预览本地开发服务器。</li>
+<li>检查页面布局。</li>
+<li>对页面局部加评论。</li>
+<li>让 Codex 操作本地页面做测试。</li>
+</ul>
+
+<p>限制：</p>
+
+<ul>
+<li>不适合需要登录态的页面。</li>
+<li>不使用你的常规浏览器 profile、cookies、扩展或已打开标签。</li>
+</ul>
+
+<h3>Computer Use</h3>
+
+<p>Computer Use 可让 Codex 操作 macOS 或 Windows 应用。适合：</p>
+
+<ul>
+<li>桌面应用测试。</li>
+<li>GUI-only bug 复现。</li>
+<li>需要点击、输入、查看屏幕的流程。</li>
+</ul>
+
+<p>因为它可能影响工作区之外的系统状态，任务要写窄，审批提示要仔细看。</p>
+
+<h3>语音输入与弹出窗口</h3>
+
+<p>App 支持语音 dictation 和浮动 thread 窗口。前端开发时，把 thread 弹到浏览器旁边，让 Codex 迭代 UI 会很顺手。</p>
+
+<h2 id="12-codex-cli">12. Codex CLI 使用技巧</h2>
+
+<h3>交互模式</h3>
+
+<pre><code class="language-bash">
+codex
+codex &quot;Explain this codebase to me&quot;
+</code></pre>
+
+<p>CLI 中你可以：</p>
+
+<ul>
+<li>输入 prompt、粘贴代码、附加图片。</li>
+<li>查看计划、命令、diff。</li>
+<li>用 <code>/permissions</code> 调整权限。</li>
+<li>用 <code>/model</code> 切换模型。</li>
+<li>用 <code>/review</code> 做审查。</li>
+<li>用 <code>/status</code> 查看模型、权限、上下文等。</li>
+</ul>
+
+<h3>恢复会话</h3>
+
+<pre><code class="language-bash">
+codex resume
+codex resume --last
+codex resume --all
+codex resume &lt;SESSION_ID&gt;
+</code></pre>
+
+<p>适合继续之前的长任务，不用重新解释上下文。</p>
+
+<h3>非交互执行</h3>
+
+<pre><code class="language-bash">
+codex exec &quot;fix the CI failure&quot;
+</code></pre>
+
+<p>适合：</p>
+
+<ul>
+<li>脚本化。</li>
+<li>CI/CD 辅助。</li>
+<li>批处理任务。</li>
+<li>自动生成报告或 changelog。</li>
+</ul>
+
+<h3>图片输入</h3>
+
+<pre><code class="language-bash">
+codex -i screenshot.png &quot;Explain this error&quot;
+codex --image img1.png,img2.jpg &quot;Summarize these diagrams&quot;
+</code></pre>
+
+<h3>常用 slash commands</h3>
+
+<table>
+<tr><th>命令</th><th>用途</th></tr>
+<tr><td><code>/permissions</code></td><td>调整权限模式</td></tr>
+<tr><td><code>/model</code></td><td>切换模型和推理强度</td></tr>
+<tr><td><code>/plan</code></td><td>进入计划模式</td></tr>
+<tr><td><code>/goal</code></td><td>设置或管理长期目标</td></tr>
+<tr><td><code>/review</code></td><td>审查当前 diff</td></tr>
+<tr><td><code>/diff</code></td><td>查看 Git diff</td></tr>
+<tr><td><code>/mention</code></td><td>附加文件或目录</td></tr>
+<tr><td><code>/mcp</code></td><td>查看 MCP 工具</td></tr>
+<tr><td><code>/skills</code></td><td>选择技能</td></tr>
+<tr><td><code>/compact</code></td><td>压缩上下文</td></tr>
+<tr><td><code>/status</code></td><td>查看当前会话状态</td></tr>
+<tr><td><code>/fork</code></td><td>分叉当前会话</td></tr>
+<tr><td><code>/side</code> 或 <code>/btw</code></td><td>开一个不干扰主线的旁路对话</td></tr>
+</table>
+
+<h2 id="13-ide">13. IDE 扩展使用技巧</h2>
+
+<p>Codex IDE 扩展适合在 VS Code、Cursor、Windsurf 等 VS Code 兼容编辑器中工作。</p>
+
+<p>核心优势：</p>
+
+<ul>
+<li>自动包含打开文件和选中代码上下文。</li>
+<li>可直接从编辑器让 Codex 修改文件。</li>
+<li>可用模型选择器和 reasoning 选择器。</li>
+<li>可把任务委派到 Cloud。</li>
+</ul>
+
+<p>常用方式：</p>
+
+<pre><code class="language-text">
+Use @example.tsx as a reference to add a new page named &quot;Resources&quot;.
+</code></pre>
+
+<p>命令面板中常见命令：</p>
+
+<ul>
+<li>Add selected text range as context。</li>
+<li>Add entire file as context。</li>
+<li>Create a new thread。</li>
+<li>Implement selected TODO。</li>
+<li>Open Codex sidebar。</li>
+</ul>
+
+<p>技巧：如果 Codex 的回答像是没看到你正在看的文件，检查 IDE context 或手动 <code>@</code> 文件。</p>
+
+<h2 id="14-cloud-github-slack-linear">14. Cloud、GitHub、Slack 与 Linear</h2>
+
+<h3>Codex Cloud</h3>
+
+<p>适合：</p>
+
+<ul>
+<li>长任务。</li>
+<li>并行任务。</li>
+<li>从 IDE/App/CLI/移动设备委派。</li>
+<li>不想占用本机资源的任务。</li>
+</ul>
+
+<p>前提：</p>
+
+<ul>
+<li>代码已在 GitHub。</li>
+<li>配好 Codex cloud environment。</li>
+<li>任务说明足够具体。</li>
+</ul>
+
+<p>CLI 可用：</p>
+
+<pre><code class="language-bash">
+codex cloud
+codex cloud exec --env ENV_ID &quot;Summarize open bugs&quot;
+</code></pre>
+
+<h3>GitHub PR 审查</h3>
+
+<p>触发方式：</p>
+
+<pre><code class="language-md">
+@codex review
+</code></pre>
+
+<p>让 Codex 修复：</p>
+
+<pre><code class="language-md">
+@codex fix the P1 issue
+</code></pre>
+
+<p>建议在 <code>AGENTS.md</code> 中写 Review guidelines，例如：</p>
+
+<pre><code class="language-md">
+## Review guidelines
+
+- 不要记录 PII。
+- 确认认证中间件包裹每个受保护 route。
+- 对迁移脚本重点检查回滚路径。
+</code></pre>
+
+<h3>Slack</h3>
+
+<p>在 Slack 线程中：</p>
+
+<pre><code class="language-text">
+@Codex fix the above in owner/repo
+</code></pre>
+
+<p>Codex 会根据上下文选择 environment。如果选择不对，在后续消息中明确 repo 或 environment。</p>
+
+<h3>Linear</h3>
+
+<p>可以把 issue assign 给 Codex，或在 comment 中：</p>
+
+<pre><code class="language-text">
+@Codex fix this in owner/repo
+</code></pre>
+
+<p>适合把 triage、bug 修复、上下文明确的小任务交给 Codex。</p>
+
+<h2 id="15-agents-md-codex">15. AGENTS.md：把项目规则写给 Codex</h2>
+
+<p><code>AGENTS.md</code> 是写给 agent 的项目说明文件。Codex 启动时会自动读取相关层级的 <code>AGENTS.md</code>，用来理解项目规则。</p>
+
+<h3>适合写什么</h3>
+
+<ul>
+<li>仓库结构。</li>
+<li>构建、测试、lint 命令。</li>
+<li>工程约定。</li>
+<li>PR 和 review 要求。</li>
+<li>安全规则。</li>
+<li>不要做的事。</li>
+<li>完成标准。</li>
+</ul>
+
+<h3>位置与优先级</h3>
+
+<p>常见位置：</p>
+
+<ul>
+<li>全局：<code>~/.codex/AGENTS.md</code></li>
+<li>仓库根目录：<code>AGENTS.md</code></li>
+<li>子目录：更具体的 <code>AGENTS.md</code> 或 <code>AGENTS.override.md</code></li>
+</ul>
+
+<p>越靠近当前工作目录的说明越具体，后加载的规则会覆盖更宽泛的规则。</p>
+
+<h3>示例</h3>
+
+<pre><code class="language-md">
+# AGENTS.md
+
+## Repository expectations
+
+- 使用 pnpm，不要使用 npm 安装依赖。
+- 修改 TypeScript 文件后运行 `pnpm typecheck`。
+- 修改 UI 后运行相关组件测试，并检查移动端布局。
+- 不要改变公开 API，除非任务明确要求。
+- 新增依赖前先说明原因和替代方案。
+
+## Review guidelines
+
+- 优先报告正确性、回归、安全和缺失测试问题。
+- 不要把纯风格偏好当成高优先级问题。
+</code></pre>
+
+<h3>维护技巧</h3>
+
+<ul>
+<li>从短而准确开始。</li>
+<li>Codex 重复犯错两次，就把规则沉淀进去。</li>
+<li>文件过长时，主文件保留核心规则，引用专门文档。</li>
+<li>修改后重启 Codex 或新开会话，确保重新加载。</li>
+</ul>
+
+<h2 id="16-skills">16. Skills：复用任务工作流</h2>
+
+<p>Skill 是一组可复用的任务说明、资源和可选脚本。它适合把“每次都要重复讲的工作流”固化下来。</p>
+
+<h3>Skill 适合什么</h3>
+
+<ul>
+<li>文档生成流程。</li>
+<li>安全扫描流程。</li>
+<li>特定框架迁移。</li>
+<li>公司内部发布检查。</li>
+<li>设计转代码规范。</li>
+<li>数据分析或报告模板。</li>
+</ul>
+
+<h3>Skill 如何触发</h3>
+
+<p>两种方式：</p>
+
+<ul>
+<li>显式：在 prompt 中写 <code>$skill-name</code>，或在 CLI/IDE 中用 <code>/skills</code>。</li>
+<li>隐式：Codex 根据 skill 的 description 判断任务匹配。</li>
+</ul>
+
+<h3>Skill 结构</h3>
+
+<pre><code class="language-md">
+---
+name: skill-name
+description: Explain exactly when this skill should and should not trigger.
+---
+
+Skill instructions for Codex to follow.
+</code></pre>
+
+<h3>保存位置</h3>
+
+<table>
+<tr><th>范围</th><th>位置</th><th>用途</th></tr>
+<tr><td>Repo</td><td><code>.agents/skills</code></td><td>仓库或子目录专用工作流</td></tr>
+<tr><td>User</td><td><code>~/.agents/skills</code></td><td>个人常用技能</td></tr>
+<tr><td>Admin</td><td><code>/etc/codex/skills</code></td><td>机器或组织默认技能</td></tr>
+<tr><td>System</td><td>Codex bundled</td><td>OpenAI 内置技能</td></tr>
+</table>
+
+<h3>创建 Skill</h3>
+
+<pre><code class="language-text">
+$skill-creator
+</code></pre>
+
+<p>或手动创建带 <code>SKILL.md</code> 的目录。</p>
+
+<p>最佳实践：</p>
+
+<ul>
+<li>一个 skill 只做一件事。</li>
+<li>description 写清楚触发范围和不触发范围。</li>
+<li>能用说明解决就不用脚本。</li>
+<li>需要确定性、格式转换或复杂工具时再加脚本。</li>
+</ul>
+
+<h2 id="17-plugins-mcp">17. Plugins：分发技能、MCP 与集成</h2>
+
+<p>Skill 是工作流本身，Plugin 是可安装的分发单元。插件可以包含：</p>
+
+<ul>
+<li>一个或多个 skills。</li>
+<li>MCP server 配置。</li>
+<li>app integrations。</li>
+<li>hooks。</li>
+<li>资源和展示元数据。</li>
+</ul>
+
+<p>适合做 plugin 的情况：</p>
+
+<ul>
+<li>想把技能发给团队安装。</li>
+<li>想把多个技能打包。</li>
+<li>想连同 MCP、hook、资源一起发。</li>
+<li>想在 Codex App 插件目录中管理。</li>
+</ul>
+
+<h3>快速创建</h3>
+
+<pre><code class="language-text">
+$plugin-creator
+</code></pre>
+
+<h3>最小插件结构</h3>
+
+<pre><code class="language-text">
+my-first-plugin/
+  .codex-plugin/
+    plugin.json
+  skills/
+    hello/
+      SKILL.md
+</code></pre>
+
+<p><code>plugin.json</code> 示例：</p>
+
+<pre><code class="language-json">
+{
+  &quot;name&quot;: &quot;my-first-plugin&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Reusable greeting workflow&quot;,
+  &quot;skills&quot;: &quot;./skills/&quot;
+}
+</code></pre>
+
+<h3>Marketplace</h3>
+
+<p>插件通过 marketplace 目录被 Codex 发现。可以是：</p>
+
+<ul>
+<li>repo-scoped marketplace。</li>
+<li>personal marketplace。</li>
+<li>Git 或本地 marketplace。</li>
+</ul>
+
+<p>CLI 管理：</p>
+
+<pre><code class="language-bash">
+codex plugin marketplace add owner/repo
+codex plugin marketplace list
+codex plugin marketplace upgrade
+codex plugin marketplace remove marketplace-name
+</code></pre>
+
+<h2 id="18-mcp">18. MCP：连接外部工具和私有上下文</h2>
+
+<p>MCP，即 Model Context Protocol，用来把外部工具和数据源接入 Codex。Codex App、CLI、IDE 共享 MCP 配置。</p>
+
+<p>适合接入：</p>
+
+<ul>
+<li>OpenAI Docs。</li>
+<li>Context7 文档。</li>
+<li>Figma。</li>
+<li>Playwright 或 Chrome DevTools。</li>
+<li>Sentry。</li>
+<li>GitHub issues/PR。</li>
+<li>Linear。</li>
+<li>内部工具。</li>
+</ul>
+
+<h3>STDIO server 示例</h3>
+
+<pre><code class="language-toml">
+[mcp_servers.context7]
+command = &quot;npx&quot;
+args = [&quot;-y&quot;, &quot;@upstash/context7-mcp&quot;]
+env_vars = [&quot;LOCAL_TOKEN&quot;]
+</code></pre>
+
+<h3>HTTP server 示例</h3>
+
+<pre><code class="language-toml">
+[mcp_servers.figma]
+url = &quot;https://mcp.figma.com/mcp&quot;
+bearer_token_env_var = &quot;FIGMA_OAUTH_TOKEN&quot;
+</code></pre>
+
+<h3>工具权限控制</h3>
+
+<pre><code class="language-toml">
+[mcp_servers.chrome_devtools]
+url = &quot;http://localhost:3000/mcp&quot;
+enabled_tools = [&quot;open&quot;, &quot;screenshot&quot;]
+default_tools_approval_mode = &quot;prompt&quot;
+startup_timeout_sec = 20
+tool_timeout_sec = 45
+enabled = true
+
+[mcp_servers.chrome_devtools.tools.open]
+approval_mode = &quot;approve&quot;
+</code></pre>
+
+<h3>使用建议</h3>
+
+<ul>
+<li>私有 Google Docs、Slack、GitHub、Notion 等数据，优先用授权 connector 或 MCP，而不是让模型凭记忆猜。</li>
+<li>对有副作用的 MCP 工具设置审批。</li>
+<li>只暴露需要的 tools，能 allowlist 就不要全开。</li>
+<li>OAuth token、API key 不要写进仓库。</li>
+</ul>
+
+<h2 id="19-hooks-rules">19. Hooks、Rules 与团队治理</h2>
+
+<h3>Hooks</h3>
+
+<p>Hooks 是 Codex 生命周期中的自动检查或动作，可放在：</p>
+
+<ul>
+<li><code>~/.codex/hooks.json</code></li>
+<li><code>~/.codex/config.toml</code></li>
+<li><code>.codex/hooks.json</code></li>
+<li><code>.codex/config.toml</code></li>
+</ul>
+
+<p>示例：</p>
+
+<pre><code class="language-toml">
+[[hooks.PreToolUse]]
+matcher = &quot;^Bash$&quot;
+
+[[hooks.PreToolUse.hooks]]
+type = &quot;command&quot;
+command = &#x27;/usr/bin/python3 &quot;$(git rev-parse --show-toplevel)/.codex/hooks/pre_tool_use_policy.py&quot;&#x27;
+timeout = 30
+statusMessage = &quot;Checking Bash command&quot;
+</code></pre>
+
+<p>用途：</p>
+
+<ul>
+<li>命令执行前检查。</li>
+<li>阻止危险工具调用。</li>
+<li>做审计记录。</li>
+<li>触发组织策略。</li>
+</ul>
+
+<h3>Rules</h3>
+
+<p>Rules 控制 Codex 在沙箱外能运行哪些命令。适合用来允许、提示或禁止特定命令前缀。</p>
+
+<p>示例：对 <code>gh pr view</code> 运行前提示。</p>
+
+<pre><code class="language-python">
+prefix_rule(
+    pattern = [&quot;gh&quot;, &quot;pr&quot;, &quot;view&quot;],
+    decision = &quot;prompt&quot;,
+    justification = &quot;Viewing PRs is allowed with approval&quot;,
+    match = [
+        &quot;gh pr view 7888&quot;,
+        &quot;gh pr view --repo openai/codex&quot;,
+    ],
+)
+</code></pre>
+
+<p>测试 rules：</p>
+
+<pre><code class="language-bash">
+codex execpolicy check --pretty \
+  --rules ~/.codex/rules/default.rules \
+  -- gh pr view 7888 --json title,body,comments
+</code></pre>
+
+<p>治理建议：</p>
+
+<ul>
+<li>对危险命令用 <code>forbidden</code>。</li>
+<li>对需要外部系统访问的命令用 <code>prompt</code>。</li>
+<li>对高频、低风险、团队认可的命令用 <code>allow</code>。</li>
+<li>用 <code>match</code> 和 <code>not_match</code> 给规则写内联测试。</li>
+</ul>
+
+<h2 id="20">20. 自动化、子代理与长任务</h2>
+
+<h3>Automations</h3>
+
+<p>Codex App 支持自动化任务，适合：</p>
+
+<ul>
+<li>定期检查 telemetry 错误。</li>
+<li>周期性生成代码变更报告。</li>
+<li>跟踪长任务进展。</li>
+<li>自动跑稳定的维护流程。</li>
+</ul>
+
+<p>如果自动化依赖当前对话上下文，使用 thread automation。如果希望每次从新任务开始，使用 standalone 或 project automation。</p>
+
+<h3>Subagents</h3>
+
+<p>子代理适合把大任务拆成并行探索。Codex 不会自动生成子代理，通常需要你明确要求。</p>
+
+<p>适合：</p>
+
+<ul>
+<li>多角度 review。</li>
+<li>大型代码库探索。</li>
+<li>日志/测试/文档并行分析。</li>
+<li>多方案调研。</li>
+</ul>
+
+<p>示例：</p>
+
+<pre><code class="language-text">
+请用并行子代理审查当前分支相对 main 的改动。
+生成 3 个子代理：
+1. 安全风险
+2. 正确性和回归
+3. 测试缺口和可维护性
+等待全部完成后，按严重程度汇总，附文件引用。
+</code></pre>
+
+<p>注意：</p>
+
+<ul>
+<li>子代理会消耗更多 tokens。</li>
+<li>读多写少的任务最适合并行。</li>
+<li>多个代理同时改代码容易冲突，要谨慎。</li>
+<li>子代理继承当前沙箱策略。</li>
+</ul>
+
+<h3>Custom agents</h3>
+
+<p>可以在：</p>
+
+<pre><code class="language-text">
+~/.codex/agents/
+.codex/agents/
+</code></pre>
+
+<p>定义专门代理。必需字段：</p>
+
+<pre><code class="language-toml">
+name = &quot;reviewer&quot;
+description = &quot;PR reviewer focused on correctness, security, and missing tests.&quot;
+developer_instructions = &quot;&quot;&quot;
+Review code like an owner.
+Prioritize correctness, security, behavior regressions, and missing test coverage.
+&quot;&quot;&quot;
+nickname_candidates = [&quot;Atlas&quot;, &quot;Delta&quot;, &quot;Echo&quot;]
+</code></pre>
+
+<h2 id="21-windows">21. Windows 使用建议</h2>
+
+<p>Codex 支持 Windows App、CLI 和 IDE 扩展。Windows 上可选：</p>
+
+<ul>
+<li>原生 Windows + elevated sandbox。</li>
+<li>原生 Windows + unelevated sandbox。</li>
+<li>WSL2 + Linux sandbox。</li>
+</ul>
+
+<p>推荐：</p>
+
+<pre><code class="language-toml">
+[windows]
+sandbox = &quot;elevated&quot;
+</code></pre>
+
+<p>如果 elevated 不可用，再考虑：</p>
+
+<pre><code class="language-toml">
+[windows]
+sandbox = &quot;unelevated&quot;
+</code></pre>
+
+<p>WSL2 适合：</p>
+
+<ul>
+<li>你的开发工具链本来就在 Linux。</li>
+<li>仓库在 WSL 的 home 目录。</li>
+<li>需要 Linux-native 行为。</li>
+</ul>
+
+<p>WSL 建议把仓库放在：</p>
+
+<pre><code class="language-bash">
+~/code/my-app
+</code></pre>
+
+<p>避免长期在 <code>/mnt/c/...</code> 下开发，以减少 I/O、权限和 symlink 问题。</p>
+
+<p>Windows 沙箱读不到某个目录时，可在 CLI 会话里：</p>
+
+<pre><code class="language-text">
+/sandbox-add-read-dir C:\absolute\directory\path
+</code></pre>
+
+<h2 id="22">22. 实战提示词模板</h2>
+
+<h3>新功能实现</h3>
+
+<pre><code class="language-text">
+目标：
+实现 &lt;功能名称&gt;。
+
+上下文：
+- 入口文件：@...
+- 类似实现：@...
+- 需求细节：...
+
+约束：
+- 复用现有组件和工具函数
+- 不改变公开 API
+- 不新增依赖，除非先说明必要性
+
+完成标准：
+- 添加/更新测试
+- 运行 &lt;命令&gt;
+- 汇报改动摘要和验证结果
+</code></pre>
+
+<h3>复杂改造前计划</h3>
+
+<pre><code class="language-text">
+/plan 请为 &lt;改造目标&gt; 制定实施计划。
+请先阅读相关文件，输出：
+1. 当前架构摘要
+2. 需要改哪些模块
+3. 风险和兼容性问题
+4. 分阶段步骤
+5. 每阶段验证方式
+先不要修改文件。
+</code></pre>
+
+<h3>Debug</h3>
+
+<pre><code class="language-text">
+问题：
+&lt;现象&gt;
+
+复现：
+1. ...
+2. ...
+
+日志/错误：
+</code></pre>
+<p>&lt;粘贴错误&gt;</p>
+<pre><code class="language-">
+
+约束：
+- ...
+
+请先定位根因，再做最小修复。完成后重新运行复现或相关测试。
+</code></pre>
+
+<h3>Review</h3>
+
+<pre><code class="language-text">
+请审查当前 diff。
+关注优先级：
+1. 正确性 bug
+2. 安全问题
+3. 回归风险
+4. 缺失测试
+5. 可维护性
+
+请按严重程度排序，给出文件和行号。
+如果没有发现问题，请明确说明，并列出剩余风险或未运行的检查。
+</code></pre>
+
+<h3>生成 AGENTS.md</h3>
+
+<pre><code class="language-text">
+请分析这个仓库，生成适合团队使用的 AGENTS.md。
+包括：
+- 项目结构
+- 安装、构建、测试、lint 命令
+- 代码风格
+- PR/review 要求
+- 安全和依赖规则
+- Codex 完成任务前必须做的验证
+</code></pre>
+
+<h3>子代理并行探索</h3>
+
+<pre><code class="language-text">
+请使用并行子代理调研这个问题。
+一个代理查代码调用链，一个代理查测试和 CI，一个代理查文档和配置。
+每个代理只返回关键发现和文件引用。
+等待全部完成后，给我一个合并结论和下一步建议。
+</code></pre>
+
+<h2 id="23">23. 排错清单</h2>
+
+<h3>Codex 没看到正确文件</h3>
+
+<p>检查：</p>
+
+<ul>
+<li>是否从仓库根目录启动。</li>
+<li>是否 <code>@</code> 了相关文件。</li>
+<li>IDE context 是否开启。</li>
+<li>App 项目是否选对目录。</li>
+<li>是否需要 <code>/mention</code> 附加文件。</li>
+</ul>
+
+<h3>Codex 改错方向</h3>
+
+<p>处理：</p>
+
+<ul>
+<li>要求它先复述目标和约束。</li>
+<li>切换到 <code>/plan</code>。</li>
+<li>给出“不要做什么”。</li>
+<li>缩小任务范围。</li>
+<li>把正确示例文件明确指出来。</li>
+</ul>
+
+<h3>命令无法运行</h3>
+
+<p>检查：</p>
+
+<ul>
+<li>sandbox 是否阻止了写入或网络。</li>
+<li>Windows sandbox 是否需要额外 read dir。</li>
+<li>是否缺依赖。</li>
+<li>是否从正确工作目录运行。</li>
+<li>approval policy 是否过严。</li>
+</ul>
+
+<h3>测试失败</h3>
+
+<p>让 Codex：</p>
+
+<pre><code class="language-text">
+请判断这个测试失败是否与你刚才的改动有关。
+如果有关，修复并重跑最小测试。
+如果无关，说明原因和可复现证据，不要扩大修改范围。
+</code></pre>
+
+<h3>MCP 工具不可用</h3>
+
+<p>检查：</p>
+
+<ul>
+<li><code>config.toml</code> 中 server 名称和配置。</li>
+<li>OAuth 是否登录。</li>
+<li>环境变量是否被 shell policy 过滤。</li>
+<li><code>enabled = false</code> 是否禁用了 server。</li>
+<li><code>enabled_tools</code> / <code>disabled_tools</code> 是否屏蔽了工具。</li>
+<li>App、CLI、IDE 是否重启并加载新配置。</li>
+</ul>
+
+<h3>Codex 反复犯同一个错误</h3>
+
+<p>处理：</p>
+
+<p>1. 让 Codex 做 retrospective。</p>
+<p>2. 把明确规则写进 <code>AGENTS.md</code>。</p>
+<p>3. 如果是通用流程，做成 Skill。</p>
+<p>4. 如果是命令安全边界，写 Rules 或 Hooks。</p>
+
+<h2 id="24">24. 官方资料索引</h2>
+
+<p>本文主要整理自 OpenAI Codex 官方手册。以下是建议继续阅读的官方页面：</p>
+
+<ul>
+<li><a href="https://developers.openai.com/codex/overview">Codex overview</a></li>
+<li><a href="https://developers.openai.com/codex/prompting">Codex prompting</a></li>
+<li><a href="https://developers.openai.com/codex/workflows">Codex workflows</a></li>
+<li><a href="https://developers.openai.com/codex/learn/best-practices">Best practices</a></li>
+<li><a href="https://developers.openai.com/codex/agent-approvals-security">Agent approvals and security</a></li>
+<li><a href="https://developers.openai.com/codex/concepts/sandboxing">Sandboxing</a></li>
+<li><a href="https://developers.openai.com/codex/config-basic">Config basics</a></li>
+<li><a href="https://developers.openai.com/codex/config-advanced">Advanced configuration</a></li>
+<li><a href="https://developers.openai.com/codex/models">Codex models</a></li>
+<li><a href="https://developers.openai.com/codex/cli">Codex CLI</a></li>
+<li><a href="https://developers.openai.com/codex/cli/slash-commands">CLI slash commands</a></li>
+<li><a href="https://developers.openai.com/codex/app">Codex App</a></li>
+<li><a href="https://developers.openai.com/codex/app/features">Codex app features</a></li>
+<li><a href="https://developers.openai.com/codex/ide">Codex IDE extension</a></li>
+<li><a href="https://developers.openai.com/codex/guides/agents-md">AGENTS.md guide</a></li>
+<li><a href="https://developers.openai.com/codex/skills">Agent Skills</a></li>
+<li><a href="https://developers.openai.com/codex/plugins">Plugins</a></li>
+<li><a href="https://developers.openai.com/codex/plugins/build">Build plugins</a></li>
+<li><a href="https://developers.openai.com/codex/mcp">Model Context Protocol</a></li>
+<li><a href="https://developers.openai.com/codex/rules">Rules</a></li>
+<li><a href="https://developers.openai.com/codex/hooks">Hooks</a></li>
+<li><a href="https://developers.openai.com/codex/subagents">Subagents</a></li>
+<li><a href="https://developers.openai.com/codex/windows">Windows</a></li>
+</ul>
+
+<p>---</p>
+
+<h2 id="section-26">最后建议</h2>
+
+<p>把 Codex 用好的关键不是“写一个神奇 prompt”，而是建立一套可重复的协作方式：</p>
+
+<ul>
+<li>小任务给清楚上下文。</li>
+<li>大任务先计划。</li>
+<li>项目规则沉淀到 <code>AGENTS.md</code>。</li>
+<li>重复流程做成 Skill。</li>
+<li>外部系统用 MCP/connector 接入。</li>
+<li>权限默认保守，按任务逐步放开。</li>
+<li>每次交付都要求验证和 review。</li>
+</ul>
+
+<p>这样 Codex 会越来越像一个熟悉你项目的队友，而不是每次都从零开始的问答工具。</p></main>
+  </div>
+</body>
+</html>
